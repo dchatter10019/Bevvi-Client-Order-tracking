@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply text-slate-800 antialiased;
+  }
+
+  input[type='date'] {
+    color-scheme: light;
+  }
+}
+
+@layer components {
+  .monitor-sidebar {
+    @apply bg-black text-white flex flex-col;
+  }
+
+  .monitor-brand {
+    @apply px-6 py-5 shrink-0 border-b border-white/10;
+  }
+
+  .monitor-input {
+    @apply w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2.5 text-sm text-white placeholder:text-slate-500 focus:border-bevvi-500 focus:outline-none focus:ring-1 focus:ring-bevvi-500;
+  }
+
+  .monitor-label {
+    @apply block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5;
+  }
+
+  .monitor-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-bevvi-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-bevvi-500 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .monitor-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-transparent px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .pipeline-segment {
+    @apply flex-1 rounded-xl px-4 py-3 border;
+  }
+
+  .list-head {
+    @apply relative px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 select-none;
+  }
+
+  .resizable-head {
+    @apply overflow-hidden;
+  }
+
+  .col-resize-handle {
+    @apply absolute right-0 top-0 h-full w-1.5 cursor-col-resize touch-none;
+  }
+
+  .col-resize-handle:hover,
+  .resizable-head.is-resizing .col-resize-handle,
+  .is-column-resizing .col-resize-handle {
+    @apply bg-bevvi-400/70;
+  }
+
+  .resizable-table {
+    table-layout: fixed;
+  }
+
+  .list-cell {
+    @apply px-4 py-3 text-sm overflow-hidden;
+  }
+
+  .detail-overlay {
+    @apply fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-stretch justify-end;
+  }
+
+  .detail-drawer {
+    @apply flex w-full max-w-[1280px] h-full bg-white shadow-2xl;
+  }
+
+  .detail-main {
+    @apply flex-1 min-w-0 flex flex-col bg-slate-50;
+  }
+
+  .detail-main-header {
+    @apply flex items-start justify-between gap-4 px-6 py-5 border-b border-slate-200 bg-white sticky top-0 z-10;
+  }
+
+  .detail-eyebrow {
+    @apply text-xs font-bold uppercase tracking-wider text-bevvi-600;
+  }
+
+  .detail-title {
+    @apply text-xl font-bold text-slate-900 mt-1 font-mono;
+  }
+
+  .detail-subtitle {
+    @apply text-sm text-slate-500 mt-1;
+  }
+
+  .detail-close {
+    @apply p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition;
+  }
+
+  .detail-main-body {
+    @apply flex-1 overflow-y-auto px-6 py-6 space-y-6;
+  }
+
+  .detail-section {
+    @apply bg-white rounded-xl border border-slate-200 p-5;
+  }
+
+  .detail-section-title {
+    @apply text-sm font-bold uppercase tracking-wider text-slate-500 mb-4;
+  }
+
+  .detail-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3;
+  }
+
+  .detail-row {
+    @apply contents;
+  }
+
+  .detail-row dt {
+    @apply text-xs font-semibold uppercase tracking-wide text-slate-400;
+  }
+
+  .detail-row dd {
+    @apply text-sm text-slate-800 font-medium break-words;
+  }
+
+  .detail-card {
+    @apply flex gap-4;
+  }
+
+  .detail-card-icon {
+    @apply h-10 w-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0;
+  }
+
+  .detail-card-title {
+    @apply font-semibold text-slate-900;
+  }
+
+  .detail-card-text {
+    @apply text-sm text-slate-600;
+  }
+
+  .detail-products {
+    @apply space-y-3;
+  }
+
+  .detail-product-row {
+    @apply flex items-start gap-3 py-3 border-b border-slate-100 last:border-0;
+  }
+
+  .detail-receipt-pane {
+    @apply w-[min(420px,32vw)] shrink-0 border-l border-slate-200 bg-white flex flex-col hidden xl:flex;
+  }
+
+  .detail-receipt-header {
+    @apply flex items-center justify-between gap-2 px-4 py-3 border-b border-slate-200 text-sm font-bold uppercase tracking-wider text-slate-700 bg-slate-50 shrink-0;
+  }
+
+  .detail-receipt-actions {
+    @apply flex items-center gap-2;
+  }
+
+  .detail-receipt-print {
+    @apply text-xs font-semibold normal-case tracking-normal px-3 py-1.5 rounded-md border border-slate-300 text-slate-600 hover:bg-white hover:text-slate-900 transition;
+  }
+
+  .detail-receipt-scroll {
+    @apply flex-1 overflow-y-auto;
+  }
+
+  @media (max-width: 1023px) {
+    .detail-drawer {
+      @apply flex-col max-w-full;
+    }
+
+    .detail-receipt-pane {
+      @apply flex w-full border-l-0 border-t max-h-[50vh];
+    }
+  }
+
+  @media print {
+    .detail-overlay {
+      @apply static bg-white backdrop-blur-none;
+    }
+
+    .detail-drawer {
+      @apply max-w-full shadow-none;
+    }
+
+    .detail-main {
+      display: none !important;
+    }
+
+    .detail-receipt-pane {
+      display: flex !important;
+      width: 100% !important;
+      border: none !important;
+      max-height: none !important;
+    }
+
+    .detail-receipt-header {
+      display: none !important;
+    }
+
+    .detail-close {
+      display: none !important;
+    }
+  }
+}
