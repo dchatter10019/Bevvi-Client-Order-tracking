@@ -49,7 +49,7 @@ const Login = ({ onLogin }) => {
             <div>
               <p className="font-semibold text-white">Live order visibility</p>
               <p className="text-sm text-slate-400 mt-1">
-                Track partner orders across your channels — curated, seamless, and actionable.
+                Track all orders across your channels — curated, seamless, and actionable.
               </p>
             </div>
           </div>

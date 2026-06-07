@@ -38,6 +38,30 @@
     @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-transparent px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50;
   }
 
+  .monitor-status-footer {
+    @apply relative z-20 flex items-center justify-between gap-4 border-t border-white/10 bg-black px-6 py-2.5 text-xs text-slate-400 shrink-0;
+  }
+
+  .monitor-status-version {
+    @apply font-medium text-slate-300;
+  }
+
+  .monitor-status-pill {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide;
+  }
+
+  .monitor-status-pill.is-ready {
+    @apply bg-emerald-500/15 text-emerald-400;
+  }
+
+  .monitor-status-pill.is-loading {
+    @apply bg-amber-500/15 text-amber-400;
+  }
+
+  .monitor-status-pill.is-error {
+    @apply bg-red-500/15 text-red-400;
+  }
+
   .pipeline-segment {
     @apply flex-1 rounded-xl px-4 py-3 border;
   }

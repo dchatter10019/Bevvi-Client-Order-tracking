@@ -2,6 +2,8 @@ export const CUSTOMERS = [
   { label: 'Air Culinaire', value: 'airculinaire' }
 ]
 
+export const APP_VERSION = '1.0.0'
+
 export const AUTH = {
   username: 'bevviorders',
   password: 'bevviorders123#'

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Activity,
   Download,
@@ -15,8 +16,10 @@ import { orderMatchesSearch, SEARCH_PLACEHOLDER } from '../utils/orderSearch'
 import OrderTable from './OrderTable'
 import OrderDetailDrawer from './OrderDetailDrawer'
 import Logo from './Logo'
+import StatusFooter from './StatusFooter'
 
 const Dashboard = ({ onLogout }) => {
+  const navigate = useNavigate()
   const initialRange = defaultDateRange()
   const [customer, setCustomer] = useState(CUSTOMERS[0].value)
   const [startDate, setStartDate] = useState(initialRange.startDate)
@@ -138,11 +141,19 @@ const Dashboard = ({ onLogout }) => {
     downloadOrdersCsv(filteredOrders, `bevvi-monitor-${slug}-${startDate}-to-${endDate}.csv`, customer)
   }
 
+  const handleLogout = () => {
+    abortControllerRef.current?.abort()
+    setSelectedOrder(null)
+    onLogout()
+    navigate('/login')
+  }
+
   const pipelineItems = getPipelineItems(customer)
 
   return (
-    <div className="min-h-screen flex bg-slate-100">
-      <aside className="monitor-sidebar w-72 shrink-0 min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden bg-slate-100">
+      <div className="flex flex-1 min-h-0">
+      <aside className="monitor-sidebar w-72 shrink-0 h-full flex flex-col overflow-y-auto">
         <div className="monitor-brand">
           <Logo size="default" />
           <h1 className="mt-3 text-xl font-bold text-white">Order Monitor</h1>
@@ -205,16 +216,17 @@ const Dashboard = ({ onLogout }) => {
         </div>
 
         <button
-          onClick={onLogout}
-          className="mt-auto pt-8 flex items-center gap-2 text-sm text-slate-500 hover:text-white transition"
+          type="button"
+          onClick={handleLogout}
+          className="monitor-btn-ghost w-full mt-8"
         >
           <LogOut className="h-4 w-4" />
-          Sign out
+          Log out
         </button>
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-h-0 min-w-0">
         <header className="bg-white border-b border-slate-200 px-6 py-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
@@ -229,15 +241,25 @@ const Dashboard = ({ onLogout }) => {
               </p>
             </div>
 
-            <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                type="search"
-                placeholder={SEARCH_PLACEHOLDER}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
-              />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto sm:shrink-0">
+              <div className="relative w-full sm:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="search"
+                  placeholder={SEARCH_PLACEHOLDER}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 shrink-0"
+              >
+                <LogOut className="h-4 w-4" />
+                Log out
+              </button>
             </div>
           </div>
         </header>
@@ -274,7 +296,7 @@ const Dashboard = ({ onLogout }) => {
           </div>
         </div>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 min-h-0 overflow-y-auto">
           {error && (
             <div className="mx-6 mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
@@ -315,6 +337,9 @@ const Dashboard = ({ onLogout }) => {
         customerLabel={customerLabel}
         onClose={() => setSelectedOrder(null)}
       />
+      </div>
+
+      <StatusFooter isLoading={isLoading} error={error} />
     </div>
   )
 }
