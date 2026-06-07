@@ -12,7 +12,7 @@ import { fetchOrders } from '../utils/api'
 import { downloadOrdersCsv } from '../utils/csvExport'
 import { CUSTOMERS, formatCurrency, getPipelineItems, getStatusLabel } from '../utils/constants'
 import { defaultDateRange, daysBetweenInclusive, daysFromTodayTo, filterOrdersByDateRange, isValidDateRange } from '../utils/dateUtils'
-import { orderMatchesSearch, SEARCH_PLACEHOLDER } from '../utils/orderSearch'
+import { orderMatchesSearch, SEARCH_PLACEHOLDER, SEARCH_TOOLTIP } from '../utils/orderSearch'
 import OrderTable from './OrderTable'
 import OrderDetailDrawer from './OrderDetailDrawer'
 import Logo from './Logo'
@@ -247,6 +247,8 @@ const Dashboard = ({ onLogout }) => {
                 <input
                   type="search"
                   placeholder={SEARCH_PLACEHOLDER}
+                  title={SEARCH_TOOLTIP}
+                  aria-label={SEARCH_TOOLTIP}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
