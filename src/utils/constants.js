@@ -24,15 +24,15 @@ const CUSTOMER_STATUS_LABELS = {
     0: 'Pending',
     1: 'Accepted',
     2: 'Delivered',
-    3: 'Accepted',
+    3: 'In Transit',
     4: 'Canceled',
     5: 'Rejected',
-    6: 'Canceled'
+    6: 'In Transit'
   }
 }
 
 const CUSTOMER_PIPELINE = {
-  airculinaire: ['Pending', 'Accepted', 'Delivered', 'Rejected', 'Canceled']
+  airculinaire: ['Pending', 'Accepted', 'In Transit', 'Delivered', 'Rejected', 'Canceled']
 }
 
 export function getStatusLabel(status, client) {

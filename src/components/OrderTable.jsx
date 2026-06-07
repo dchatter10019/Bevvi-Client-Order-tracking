@@ -39,6 +39,7 @@ function loadWidths() {
 const statusStyles = {
   Pending: 'bg-amber-100 text-amber-800',
   Accepted: 'bg-sky-100 text-sky-800',
+  'In Transit': 'bg-indigo-100 text-indigo-800',
   Delivered: 'bg-emerald-100 text-emerald-800',
   Shipped: 'bg-indigo-100 text-indigo-800',
   Canceled: 'bg-slate-100 text-slate-600',

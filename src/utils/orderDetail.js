@@ -46,10 +46,24 @@ export function getBevviChargeTotal(order) {
 }
 
 export function getTrackerSteps(status, client) {
+  const numericStatus = Number(status)
+
+  if (client === 'airculinaire') {
+    const isAccepted = numericStatus === 1 || numericStatus === 2 || numericStatus === 3 || numericStatus === 6
+    const isInTransit = numericStatus === 3 || numericStatus === 6 || numericStatus === 2
+
+    return [
+      { key: 'ordered', label: 'Ordered', done: true },
+      { key: 'accepted', label: 'Accepted', done: isAccepted },
+      { key: 'in_transit', label: 'In Transit', done: isInTransit },
+      { key: 'delivered', label: 'Delivered', done: numericStatus === 2 }
+    ]
+  }
+
   const label =
-    status === 2
+    numericStatus === 2
       ? 'delivered'
-      : status === 1 || status === 3
+      : numericStatus === 1 || numericStatus === 3
         ? 'confirmed'
         : 'ordered'
 
