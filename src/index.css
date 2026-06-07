@@ -180,7 +180,7 @@
   }
 
   .detail-receipt-pane {
-    @apply w-[min(420px,32vw)] shrink-0 border-l border-slate-200 bg-white flex flex-col hidden xl:flex;
+    @apply hidden w-[min(420px,32vw)] shrink-0 border-l border-slate-200 bg-white flex-col lg:flex;
   }
 
   .detail-receipt-header {
