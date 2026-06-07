@@ -218,7 +218,7 @@ const Dashboard = ({ onLogout }) => {
         <button
           type="button"
           onClick={handleLogout}
-          className="monitor-btn-ghost w-full mt-8"
+          className="monitor-btn-logout w-full mt-8"
         >
           <LogOut className="h-4 w-4" />
           Log out
@@ -254,14 +254,6 @@ const Dashboard = ({ onLogout }) => {
                   className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
                 />
               </div>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 shrink-0"
-              >
-                <LogOut className="h-4 w-4" />
-                Log out
-              </button>
             </div>
           </div>
         </header>
