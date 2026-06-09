@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Package, Printer, Store, Truck, User, X } from 'lucide-react'
 import { formatCurrency, formatDateTime, getStatusLabel } from '../utils/constants'
-import { getOrderProducts, getProductLineTotal, hasTrackingInfo, isShippingOrder } from '../utils/orderDetail'
+import { getOrderProducts, getProductLineTotal, getNetworkServiceCharge, hasTrackingInfo, isShippingOrder } from '../utils/orderDetail'
 import OrderReceipt from './OrderReceipt'
 
 function DetailSection({ title, children }) {
@@ -166,6 +166,9 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
                 <DetailRow label="Delivery Charge" value={formatCurrency(order.deliveryCharge)} />
                 <DetailRow label="Service Charge" value={formatCurrency(order.serviceCharge)} />
                 <DetailRow label="Service Charge Tax" value={formatCurrency(order.serviceChargeTax)} />
+                {getNetworkServiceCharge(order) > 0 && (
+                  <DetailRow label="Network Service Charge" value={formatCurrency(order.additionalFee)} />
+                )}
                 <DetailRow label="Tip" value={formatCurrency(order.tipAmt || order.tipAmount)} />
                 <DetailRow label="Store Total" value={formatCurrency(order.storeTotal)} />
                 <DetailRow label="Bevvi Total" value={formatCurrency(order.bevviTotal)} />

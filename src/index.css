@@ -18,6 +18,46 @@
     @apply bg-black text-white flex flex-col;
   }
 
+  .monitor-sidebar-backdrop {
+    @apply fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm;
+  }
+
+  .monitor-sidebar-panel {
+    @apply fixed inset-y-0 left-0 z-50 -translate-x-full transition-transform duration-200 ease-out shadow-2xl;
+  }
+
+  .monitor-sidebar-panel.is-open {
+    @apply translate-x-0;
+  }
+
+  .monitor-sidebar-close {
+    @apply rounded-lg p-2 text-slate-400 transition hover:bg-white/10 hover:text-white;
+  }
+
+  .monitor-mobile-menu {
+    @apply mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:bg-slate-50;
+  }
+
+  .monitor-pipeline-scroll {
+    @apply flex gap-2 overflow-x-auto pb-1 -mx-1 px-1;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .monitor-pipeline-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .monitor-pipeline-pill {
+    @apply rounded-full px-3 py-1.5 text-xs font-semibold transition;
+  }
+
+  @media (min-width: 1024px) {
+    .monitor-sidebar-panel {
+      @apply static z-auto translate-x-0 shadow-none;
+    }
+  }
+
   .monitor-brand {
     @apply px-6 py-5 shrink-0 border-b border-white/10;
   }
@@ -43,11 +83,11 @@
   }
 
   .monitor-status-footer {
-    @apply relative z-20 flex items-center justify-between gap-4 border-t border-white/10 bg-black px-6 py-2.5 text-xs text-slate-400 shrink-0;
+    @apply relative z-20 flex items-center justify-between gap-3 border-t border-white/10 bg-black px-4 sm:px-6 py-2.5 text-xs text-slate-400 shrink-0;
   }
 
   .monitor-status-version {
-    @apply font-medium text-slate-300;
+    @apply font-medium text-slate-300 text-right truncate;
   }
 
   .monitor-status-pill {
@@ -96,6 +136,42 @@
     @apply px-4 py-3 text-sm overflow-hidden;
   }
 
+  .order-card-list {
+    @apply divide-y divide-slate-200 bg-white;
+  }
+
+  .order-card {
+    @apply block w-full px-4 py-4 text-left transition-colors;
+  }
+
+  .order-card:hover {
+    @apply bg-slate-50;
+  }
+
+  .order-card.is-selected {
+    @apply bg-bevvi-50;
+  }
+
+  .order-card-top {
+    @apply flex items-start justify-between gap-3;
+  }
+
+  .order-card-number {
+    @apply font-mono text-sm font-semibold text-bevvi-700 break-all;
+  }
+
+  .order-card-meta {
+    @apply mt-2 flex items-center justify-between gap-3 text-sm text-slate-500;
+  }
+
+  .order-card-total {
+    @apply font-semibold text-slate-900 shrink-0;
+  }
+
+  .order-card-details {
+    @apply mt-2 flex flex-col gap-1 text-xs text-slate-500;
+  }
+
   .detail-overlay {
     @apply fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-stretch justify-end;
   }
@@ -109,7 +185,7 @@
   }
 
   .detail-main-header {
-    @apply flex items-start justify-between gap-4 px-6 py-5 border-b border-slate-300 bg-slate-200 sticky top-0 z-10;
+    @apply flex items-start justify-between gap-3 sm:gap-4 px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-300 bg-slate-200 sticky top-0 z-10;
   }
 
   .detail-eyebrow {
@@ -117,7 +193,7 @@
   }
 
   .detail-title {
-    @apply text-xl font-bold text-slate-900 mt-1 font-mono;
+    @apply text-base sm:text-xl font-bold text-slate-900 mt-1 font-mono break-all;
   }
 
   .detail-subtitle {
@@ -129,11 +205,11 @@
   }
 
   .detail-main-body {
-    @apply flex-1 overflow-y-auto px-6 py-6 space-y-6;
+    @apply flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6;
   }
 
   .detail-section {
-    @apply bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm;
+    @apply bg-white rounded-xl border border-slate-200/80 p-4 sm:p-5 shadow-sm;
   }
 
   .detail-section-title {
@@ -204,8 +280,12 @@
       @apply flex-col max-w-full;
     }
 
+    .detail-main {
+      @apply min-h-0 flex-1;
+    }
+
     .detail-receipt-pane {
-      @apply flex w-full border-l-0 border-t max-h-[50vh];
+      @apply flex w-full border-l-0 border-t max-h-[42vh] min-h-[220px];
     }
   }
 

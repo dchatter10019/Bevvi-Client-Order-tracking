@@ -37,12 +37,17 @@ export function getStoreChargeTotal(order) {
   return Number(order.storeTotal) || 0
 }
 
+export function getNetworkServiceCharge(order) {
+  return Number(order.additionalFee) || 0
+}
+
 export function getBevviChargeTotal(order) {
   const taxes = Number(order.taxes) || 0
   const serviceCharge = Number(order.serviceCharge) || 0
   const serviceChargeTax = Number(order.serviceChargeTax) || 0
   const bevviCCFee = Number(order.bevviCCFee) || 0
-  return taxes + serviceCharge + serviceChargeTax + bevviCCFee
+  const networkServiceCharge = getNetworkServiceCharge(order)
+  return taxes + serviceCharge + serviceChargeTax + bevviCCFee + networkServiceCharge
 }
 
 export function getTrackerSteps(status, client) {

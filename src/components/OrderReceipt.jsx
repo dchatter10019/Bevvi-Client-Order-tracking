@@ -107,6 +107,7 @@ const OrderReceipt = ({ order, customer, customerLabel }) => {
     { label: 'Tax', value: order.taxes },
     { label: 'Service Charge', value: order.serviceCharge },
     { label: 'Service Charge Tax', value: order.serviceChargeTax },
+    { label: 'Network Service Charge', value: order.additionalFee, show: (Number(order.additionalFee) || 0) > 0 },
     { label: 'Bevvi Credit Card Fee', value: order.bevviCCFee }
   ]
 

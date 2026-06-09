@@ -55,6 +55,51 @@ function StatusBadge({ status, client }) {
   )
 }
 
+function OrderCardList({ orders, customer, selectedOrderId, onOrderSelect }) {
+  return (
+    <div className="order-card-list lg:hidden">
+      {orders.map((order) => {
+        const recipient = order.recipientorders?.[0] || {}
+        const store = order.estDetails || {}
+        const recipientName = [recipient.firstName, recipient.lastName].filter(Boolean).join(' ')
+        const location = [recipient.city, recipient.state].filter(Boolean).join(', ')
+        const orderId = order.id || order.corpOrderNum
+        const isSelected = selectedOrderId === orderId
+
+        return (
+          <button
+            key={orderId}
+            type="button"
+            onClick={() => onOrderSelect?.(order)}
+            className={`order-card ${isSelected ? 'is-selected' : ''}`}
+          >
+            <div className="order-card-top">
+              <span className="order-card-number">{order.corpOrderNum}</span>
+              <StatusBadge status={order.corpOrderStatus} client={customer} />
+            </div>
+
+            <div className="order-card-meta">
+              <span>{formatDateTime(order.createdAt)}</span>
+              <span className="order-card-total">{formatCurrency(order.orderTotal)}</span>
+            </div>
+
+            {(recipient.externalOrderNumber || location || recipientName || store.name) && (
+              <div className="order-card-details">
+                {recipient.externalOrderNumber && (
+                  <span>Ref {recipient.externalOrderNumber}</span>
+                )}
+                {location && <span>{location}</span>}
+                {recipientName && <span>{recipientName}</span>}
+                {store.name && <span>{store.name}</span>}
+              </div>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function ResizableHeader({ column, width, onResizeStart, isResizing }) {
   return (
     <th
@@ -136,7 +181,15 @@ function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
   }
 
   return (
-    <div className={`overflow-x-auto ${resizingColumn ? 'is-column-resizing' : ''}`}>
+    <>
+      <OrderCardList
+        orders={orders}
+        customer={customer}
+        selectedOrderId={selectedOrderId}
+        onOrderSelect={onOrderSelect}
+      />
+
+      <div className={`hidden lg:block overflow-x-auto ${resizingColumn ? 'is-column-resizing' : ''}`}>
       <table className="resizable-table" style={{ width: tableWidth, minWidth: '100%' }}>
         <colgroup>
           {COLUMNS.map((column) => (
@@ -208,7 +261,8 @@ function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
           })}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   )
 }
 

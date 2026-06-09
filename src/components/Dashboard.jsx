@@ -4,9 +4,11 @@ import {
   Activity,
   Download,
   LogOut,
+  Menu,
   RefreshCw,
   Search,
-  SlidersHorizontal
+  SlidersHorizontal,
+  X
 } from 'lucide-react'
 import { fetchOrders } from '../utils/api'
 import { downloadOrdersCsv } from '../utils/csvExport'
@@ -32,6 +34,7 @@ const Dashboard = ({ onLogout }) => {
   const [error, setError] = useState('')
   const [lastFetched, setLastFetched] = useState(null)
   const [selectedOrder, setSelectedOrder] = useState(null)
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const fetchRequestRef = useRef(0)
   const abortControllerRef = useRef(null)
 
@@ -102,6 +105,21 @@ const Dashboard = ({ onLogout }) => {
   }, [customer, neededDays, loadOrders])
 
   useEffect(() => {
+    setFiltersOpen(false)
+  }, [customer])
+
+  useEffect(() => {
+    if (!filtersOpen) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [filtersOpen])
+
+  useEffect(() => {
     return () => abortControllerRef.current?.abort()
   }, [])
 
@@ -152,10 +170,33 @@ const Dashboard = ({ onLogout }) => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-slate-100">
-      <div className="flex flex-1 min-h-0">
-      <aside className="monitor-sidebar w-72 shrink-0 h-full flex flex-col overflow-y-auto">
+      <div className="flex flex-1 min-h-0 relative">
+      {filtersOpen && (
+        <button
+          type="button"
+          className="monitor-sidebar-backdrop lg:hidden"
+          onClick={() => setFiltersOpen(false)}
+          aria-label="Close filters"
+        />
+      )}
+
+      <aside
+        className={`monitor-sidebar monitor-sidebar-panel w-72 shrink-0 h-full flex flex-col overflow-y-auto ${
+          filtersOpen ? 'is-open' : ''
+        }`}
+      >
         <div className="monitor-brand">
-          <Logo size="default" />
+          <div className="flex items-start justify-between gap-3">
+            <Logo size="default" />
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(false)}
+              className="monitor-sidebar-close lg:hidden"
+              aria-label="Close filters"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
           <h1 className="mt-3 text-xl font-bold text-white">Order Monitor</h1>
           <p className="text-xs text-slate-400 mt-1">Partner channel console</p>
         </div>
@@ -226,47 +267,58 @@ const Dashboard = ({ onLogout }) => {
         </div>
       </aside>
 
-      <div className="flex-1 flex flex-col min-h-0 min-w-0">
-        <header className="bg-white border-b border-slate-200 px-6 py-5">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-bevvi-600" />
-                <h2 className="text-lg font-bold text-slate-900">{customerLabel}</h2>
+      <div className="flex-1 flex flex-col min-h-0 min-w-0 w-full">
+        <header className="bg-white border-b border-slate-200 px-4 sm:px-6 py-4 sm:py-5">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-3">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(true)}
+                className="monitor-mobile-menu lg:hidden"
+                aria-label="Open filters"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-bevvi-600 shrink-0" />
+                  <h2 className="text-lg font-bold text-slate-900 truncate">{customerLabel}</h2>
+                </div>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  {filteredOrders.length} orders · {formatCurrency(totalValue)} total value
+                  {lastFetched && (
+                    <span className="hidden sm:inline">{` · Updated ${lastFetched.toLocaleTimeString()}`}</span>
+                  )}
+                  {isLoading && ' · Updating…'}
+                </p>
               </div>
-              <p className="text-sm text-slate-500 mt-0.5">
-                {filteredOrders.length} orders · {formatCurrency(totalValue)} total value
-                {lastFetched && ` · Updated ${lastFetched.toLocaleTimeString()}`}
-                {isLoading && ' · Updating…'}
-              </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto sm:shrink-0">
-              <div className="relative w-full sm:w-72">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input
-                  type="search"
-                  placeholder={SEARCH_PLACEHOLDER}
-                  title={SEARCH_TOOLTIP}
-                  aria-label={SEARCH_TOOLTIP}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
-                />
-              </div>
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="search"
+                placeholder={SEARCH_PLACEHOLDER}
+                title={SEARCH_TOOLTIP}
+                aria-label={SEARCH_TOOLTIP}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full rounded-lg border border-slate-200 bg-slate-50 py-2 pl-10 pr-3 text-sm focus:border-bevvi-500 focus:outline-none focus:ring-2 focus:ring-bevvi-500/20"
+              />
             </div>
           </div>
         </header>
 
-        <div className="px-6 py-4 bg-white border-b border-slate-200">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-slate-200">
           <div className="flex items-center gap-2 mb-3">
-            <SlidersHorizontal className="h-4 w-4 text-slate-400" />
+            <SlidersHorizontal className="h-4 w-4 text-slate-400 shrink-0" />
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">Status pipeline</span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="monitor-pipeline-scroll">
             <button
               onClick={() => setStatusFilter('all')}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+              className={`monitor-pipeline-pill shrink-0 ${
                 statusFilter === 'all'
                   ? 'bg-slate-900 text-white'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -278,7 +330,7 @@ const Dashboard = ({ onLogout }) => {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                className={`monitor-pipeline-pill shrink-0 ${
                   statusFilter === status
                     ? 'bg-bevvi-600 text-white'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -292,7 +344,7 @@ const Dashboard = ({ onLogout }) => {
 
         <main className="flex-1 min-h-0 overflow-y-auto">
           {error && (
-            <div className="mx-6 mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="mx-4 sm:mx-6 mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           )}
@@ -318,7 +370,10 @@ const Dashboard = ({ onLogout }) => {
                 orders={sortedOrders}
                 customer={customer}
                 selectedOrderId={selectedOrder?.id || selectedOrder?.corpOrderNum}
-                onOrderSelect={setSelectedOrder}
+                onOrderSelect={(order) => {
+                  setSelectedOrder(order)
+                  setFiltersOpen(false)
+                }}
               />
             </div>
           )}
