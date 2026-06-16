@@ -12,7 +12,8 @@ import {
 } from 'lucide-react'
 import { fetchOrders } from '../utils/api'
 import { downloadOrdersCsv } from '../utils/csvExport'
-import { CUSTOMERS, formatCurrency, getPipelineItems, getStatusLabel } from '../utils/constants'
+import { formatCurrency, getPipelineItems, getStatusLabel } from '../utils/constants'
+import { useCustomer } from '../customers/CustomerContext'
 import { defaultDateRange, daysBetweenInclusive, daysFromTodayTo, filterOrdersByDateRange, isValidDateRange } from '../utils/dateUtils'
 import { orderMatchesSearch, SEARCH_PLACEHOLDER, SEARCH_TOOLTIP } from '../utils/orderSearch'
 import OrderTable from './OrderTable'
@@ -23,7 +24,7 @@ import StatusFooter from './StatusFooter'
 const Dashboard = ({ onLogout }) => {
   const navigate = useNavigate()
   const initialRange = defaultDateRange()
-  const [customer, setCustomer] = useState(CUSTOMERS[0].value)
+  const { customerId: customer, setCustomerId: setCustomer, config, customers, locked } = useCustomer()
   const [startDate, setStartDate] = useState(initialRange.startDate)
   const [endDate, setEndDate] = useState(initialRange.endDate)
   const [rawOrders, setRawOrders] = useState([])
@@ -38,7 +39,7 @@ const Dashboard = ({ onLogout }) => {
   const fetchRequestRef = useRef(0)
   const abortControllerRef = useRef(null)
 
-  const customerLabel = CUSTOMERS.find((c) => c.value === customer)?.label || customer
+  const customerLabel = config?.label || customer
   const dayCount = daysBetweenInclusive(startDate, endDate)
   const neededDays = daysFromTodayTo(startDate)
   const rangeIsValid = isValidDateRange(startDate, endDate)
@@ -169,7 +170,7 @@ const Dashboard = ({ onLogout }) => {
   const pipelineItems = getPipelineItems(customer)
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-slate-100">
+    <div className="h-screen flex flex-col overflow-hidden bg-bevvi-canvas">
       <div className="flex flex-1 min-h-0 relative">
       {filtersOpen && (
         <button
@@ -205,17 +206,21 @@ const Dashboard = ({ onLogout }) => {
         <div className="space-y-5 flex-1">
           <div>
             <label className="monitor-label">Customer</label>
-            <select
-              value={customer}
-              onChange={(e) => setCustomer(e.target.value)}
-              className="monitor-input"
-            >
-              {CUSTOMERS.map((item) => (
-                <option key={item.value} value={item.value}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+            {locked ? (
+              <p className="monitor-input cursor-default select-none">{customerLabel}</p>
+            ) : (
+              <select
+                value={customer}
+                onChange={(e) => setCustomer(e.target.value)}
+                className="monitor-input"
+              >
+                {customers.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div>
@@ -332,7 +337,7 @@ const Dashboard = ({ onLogout }) => {
                 onClick={() => setStatusFilter(status)}
                 className={`monitor-pipeline-pill shrink-0 ${
                   statusFilter === status
-                    ? 'bg-bevvi-600 text-white'
+                    ? 'bg-bevvi-600 text-bevvi-onprimary'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                 }`}
               >

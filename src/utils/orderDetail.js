@@ -3,6 +3,11 @@ export function getOrderProducts(order) {
   return order.recipientorders?.[0]?.products || []
 }
 
+/** Ordering company from the API account object (falls back to legacy recipient field). */
+export function getOrderCompanyName(order) {
+  return order.account?.companyName || order.recipientorders?.[0]?.companyName || ''
+}
+
 export function formatReceiptDate(value) {
   if (!value) return '—'
   const date = new Date(value)

@@ -1,3 +1,6 @@
+import { getCustomerConfig } from '../customers/customerRegistry'
+import { getOrderCompanyName } from './orderDetail'
+
 const AMOUNT_FIELDS = [
   'orderTotal',
   'subTotal',
@@ -14,6 +17,14 @@ const AMOUNT_FIELDS = [
   'giftTotal',
   'totalCCFee'
 ]
+
+function matchesCustomer(order, termLower) {
+  const clientId = order.corpClient
+  if (clientId?.toLowerCase().includes(termLower)) return true
+  const label = getCustomerConfig(clientId)?.label
+  if (label?.toLowerCase().includes(termLower)) return true
+  return false
+}
 
 function parseAmountQuery(term) {
   const cleaned = term.trim().replace(/[$,\s]/g, '')
@@ -60,22 +71,25 @@ export function orderMatchesSearch(order, rawSearch) {
   if (!term) return true
 
   const recipient = order.recipientorders?.[0] || {}
-  const amountQuery = parseAmountQuery(term)
-
-  if (isAmountSearch(term) && amountQuery != null) {
-    return matchesExactAmount(order, amountQuery)
-  }
-
   const termLower = term.toLowerCase()
+
   if (order.corpOrderNum?.toLowerCase().includes(termLower)) return true
   if (recipient.externalOrderNumber?.toLowerCase().includes(termLower)) return true
+  if (getOrderCompanyName(order).toLowerCase().includes(termLower)) return true
+  if (matchesCustomer(order, termLower)) return true
+
+  const amountQuery = parseAmountQuery(term)
+  if (isAmountSearch(term) && amountQuery != null && matchesExactAmount(order, amountQuery)) {
+    return true
+  }
+
   if (matchesLocation(recipient, termLower)) return true
 
   return false
 }
 
 export const SEARCH_PLACEHOLDER =
-  'Search by order number, amount, or location…'
+  'Search by order number, company, amount, or location…'
 
 export const SEARCH_TOOLTIP =
-  'Search by Bevvi order number, external order number, exact amount (e.g. 1,389.00), or location (city, state, or zip).'
+  'Search by Bevvi order number, external order number, company name, exact amount (e.g. 1,389.00), or location (city, state, or zip).'

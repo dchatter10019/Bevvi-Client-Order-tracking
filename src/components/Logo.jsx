@@ -1,4 +1,8 @@
+import { useCustomer } from '../customers/CustomerContext'
+
 const Logo = ({ size = 'default', className = '' }) => {
+  const { config } = useCustomer() || {}
+
   const sizes = {
     small: { className: 'h-9 w-9', width: 72, height: 72 },
     default: { className: 'h-12 w-12', width: 96, height: 96 },
@@ -10,8 +14,8 @@ const Logo = ({ size = 'default', className = '' }) => {
 
   return (
     <img
-      src="/bevvi-logo.png"
-      alt="Bevvi"
+      src={config?.logo || '/bevvi-logo.png'}
+      alt={config?.label || 'Bevvi'}
       width={width}
       height={height}
       className={`block shrink-0 object-contain object-left ${sizeClass} ${className}`}

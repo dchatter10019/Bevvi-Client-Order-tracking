@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { formatCurrency, formatDateTime, getStatusLabel } from '../utils/constants'
+import { getOrderCompanyName } from '../utils/orderDetail'
 
 const STORAGE_KEY = 'bevvi-order-monitor-column-widths'
 
@@ -10,6 +11,7 @@ const COLUMNS = [
   { id: 'orderDate', label: 'Order Date', defaultWidth: 180, minWidth: 130, nowrap: true },
   { id: 'deliveryDate', label: 'Delivery Date', defaultWidth: 180, minWidth: 130, nowrap: true },
   { id: 'recipient', label: 'Recipient', defaultWidth: 160, minWidth: 100 },
+  { id: 'company', label: 'Company', defaultWidth: 180, minWidth: 110 },
   { id: 'location', label: 'Location', defaultWidth: 140, minWidth: 100 },
   { id: 'store', label: 'Store', defaultWidth: 180, minWidth: 120 },
   { id: 'total', label: 'Total', defaultWidth: 110, minWidth: 90, align: 'right', nowrap: true }
@@ -83,11 +85,12 @@ function OrderCardList({ orders, customer, selectedOrderId, onOrderSelect }) {
               <span className="order-card-total">{formatCurrency(order.orderTotal)}</span>
             </div>
 
-            {(recipient.externalOrderNumber || location || recipientName || store.name) && (
+            {(recipient.externalOrderNumber || getOrderCompanyName(order) || location || recipientName || store.name) && (
               <div className="order-card-details">
                 {recipient.externalOrderNumber && (
                   <span>Ref {recipient.externalOrderNumber}</span>
                 )}
+                {getOrderCompanyName(order) && <span>{getOrderCompanyName(order)}</span>}
                 {location && <span>{location}</span>}
                 {recipientName && <span>{recipientName}</span>}
                 {store.name && <span>{store.name}</span>}
@@ -223,6 +226,7 @@ function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
               orderDate: formatDateTime(order.createdAt),
               deliveryDate: formatDateTime(order.deliveryDate || order.deliveryDateTimeToDisplay),
               recipient: recipientName || '—',
+              company: getOrderCompanyName(order) || '—',
               location: location || '—',
               store: store.name || '—',
               total: formatCurrency(order.orderTotal)

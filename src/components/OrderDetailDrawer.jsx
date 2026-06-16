@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Package, Printer, Store, Truck, User, X } from 'lucide-react'
 import { formatCurrency, formatDateTime, getStatusLabel } from '../utils/constants'
-import { getOrderProducts, getProductLineTotal, getNetworkServiceCharge, hasTrackingInfo, isShippingOrder } from '../utils/orderDetail'
+import { getOrderProducts, getProductLineTotal, getNetworkServiceCharge, getOrderCompanyName, hasTrackingInfo, isShippingOrder } from '../utils/orderDetail'
 import OrderReceipt from './OrderReceipt'
 
 function DetailSection({ title, children }) {
@@ -80,6 +80,7 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
                 <DetailRow label="Recipient Order Number" value={recipient.recipientOrderNum} />
                 <DetailRow label="Status" value={statusLabel} />
                 <DetailRow label="Order Type" value={order.orderType} />
+                <DetailRow label="Company" value={getOrderCompanyName(order)} />
                 <DetailRow label="Client" value={order.corpClient || customerLabel} />
               </dl>
             </DetailSection>
@@ -110,7 +111,7 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
                 </div>
                 <div>
                   <p className="detail-card-title">{recipientName || '—'}</p>
-                  <p className="detail-card-text">{recipient.companyName}</p>
+                  <p className="detail-card-text">{getOrderCompanyName(order)}</p>
                   <p className="detail-card-text">{recipient.email}</p>
                   <p className="detail-card-text">{recipient.phoneNum}</p>
                   <p className="detail-card-text mt-2">
@@ -189,7 +190,7 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
         <aside className="detail-receipt-pane">
           <div className="detail-receipt-header">
             <div className="flex items-center gap-2">
-              <Truck className="h-4 w-4 text-[#c8102e]" />
+              <Truck className="h-4 w-4 text-bevvi-accent" />
               <span>Receipt</span>
             </div>
             <div className="detail-receipt-actions">

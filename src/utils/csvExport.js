@@ -15,6 +15,7 @@ function flattenOrder(order, client) {
   return {
     orderNumber: order.corpOrderNum || order.origOrderNumber || '',
     externalOrderNumber: recipient.externalOrderNumber || '',
+    companyName: order.account?.companyName || recipient.companyName || '',
     status: getStatusLabel(order.corpOrderStatus, client || order.corpClient),
     orderDate: formatDateTime(order.createdAt),
     deliveryDate: formatDateTime(order.deliveryDate || order.deliveryDateTimeToDisplay),
@@ -41,6 +42,7 @@ function flattenOrder(order, client) {
 const CSV_COLUMNS = [
   ['orderNumber', 'Bevvi Order Number'],
   ['externalOrderNumber', 'External Order Number'],
+  ['companyName', 'Company'],
   ['status', 'Status'],
   ['orderDate', 'Order Date'],
   ['deliveryDate', 'Delivery Date'],

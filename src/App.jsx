@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
+import { CustomerProvider } from './customers/CustomerContext'
 import './App.css'
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
   }
 
   return (
+    <CustomerProvider>
     <BrowserRouter>
       <Routes>
         <Route
@@ -52,6 +54,7 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+    </CustomerProvider>
   )
 }
 

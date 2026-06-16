@@ -4,6 +4,7 @@ import {
   formatReceiptDate,
   formatReceiptTime,
   getBevviChargeTotal,
+  getOrderCompanyName,
   getOrderProducts,
   getProductLineTotal,
   getProductSubtitle,
@@ -84,6 +85,8 @@ function ChargeGroup({ num, name, total, lines }) {
   )
 }
 
+const RECEIPT_TAGLINE = 'Seamless Alcohol Delivery'
+
 const OrderReceipt = ({ order, customer, customerLabel }) => {
   const recipient = order.recipientorders?.[0] || {}
   const store = order.estDetails || {}
@@ -118,7 +121,7 @@ const OrderReceipt = ({ order, customer, customerLabel }) => {
         <header className="receipt-header">
           <div className="receipt-brand">
             <Logo size="receipt" className="receipt-logo" />
-            <div className="receipt-est">Alcohol · Made · Easy</div>
+            <div className="receipt-est">{RECEIPT_TAGLINE}</div>
           </div>
           <div className="receipt-doc-meta">
             <span className="label">Order Receipt</span>
@@ -134,7 +137,7 @@ const OrderReceipt = ({ order, customer, customerLabel }) => {
         <div className="receipt-hero">
           <div>
             <div className="receipt-tagline">
-              Alcohol Made Easy<span className="period">.</span>
+              {RECEIPT_TAGLINE}<span className="period">.</span>
             </div>
             <div className="receipt-subhead">Your order, seamlessly delivered — start to doorstep.</div>
           </div>
@@ -227,7 +230,7 @@ const OrderReceipt = ({ order, customer, customerLabel }) => {
 
             <div className="receipt-recipient">
               <div className="name">{recipientName || 'Recipient'}</div>
-              <div className="role">{recipient.companyName || 'Recipient'}</div>
+              <div className="role">{getOrderCompanyName(order) || 'Recipient'}</div>
               <div className="addr">
                 {recipient.streetAddress}
                 {recipient.aptSuiteNum ? `, ${recipient.aptSuiteNum}` : ''}

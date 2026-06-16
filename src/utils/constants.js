@@ -1,8 +1,6 @@
-export const CUSTOMERS = [
-  { label: 'Air Culinaire', value: 'airculinaire' }
-]
+import { getCustomerConfig } from '../customers/customerRegistry'
 
-export const APP_VERSION = '1.0.0'
+export const APP_VERSION = '1.0.1'
 
 export const AUTH = {
   username: 'bevviorders',
@@ -19,32 +17,24 @@ export const ORDER_STATUS_LABELS = {
   6: 'Canceled'
 }
 
-const CUSTOMER_STATUS_LABELS = {
-  airculinaire: {
-    0: 'Pending',
-    1: 'Accepted',
-    2: 'Delivered',
-    3: 'In Transit',
-    4: 'Canceled',
-    5: 'Rejected',
-    6: 'In Transit'
-  }
-}
-
-const CUSTOMER_PIPELINE = {
-  airculinaire: ['Pending', 'Accepted', 'In Transit', 'Delivered', 'Rejected', 'Canceled']
-}
-
 export function getStatusLabel(status, client) {
-  const clientLabels = client && CUSTOMER_STATUS_LABELS[client]
-  if (clientLabels && status in clientLabels) {
-    return clientLabels[status]
+  const config = client ? getCustomerConfig(client) : null
+  if (config && status in config.statuses) {
+    return config.statuses[status]
   }
   return ORDER_STATUS_LABELS[status] ?? `Status ${status}`
 }
 
+export function getCustomerLabel(clientId) {
+  if (!clientId) return '—'
+  const config = getCustomerConfig(clientId)
+  return config?.label || clientId
+}
+
 export function getPipelineItems(client) {
-  return CUSTOMER_PIPELINE[client] ?? ['Pending', 'Accepted', 'Shipped', 'Delivered']
+  const config = client ? getCustomerConfig(client) : null
+  if (config?.pipeline?.length) return config.pipeline
+  return ['Pending', 'Accepted', 'Shipped', 'Delivered']
 }
 
 export function formatCurrency(value) {

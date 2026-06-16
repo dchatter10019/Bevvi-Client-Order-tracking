@@ -1,14 +1,15 @@
 {
   "name": "order-monitor-dashboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Bevvi Order Monitor Dashboard",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node scripts/select-customer.mjs && vite",
+    "build": "node scripts/select-customer.mjs && vite build",
     "preview": "vite preview",
     "server": "node server.js",
-    "dev:full": "node server.js & vite"
+    "dev:full": "node server.js & vite",
+    "customer": "node scripts/select-customer.mjs"
   },
   "dependencies": {
     "axios": "^1.6.0",

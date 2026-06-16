@@ -1,9 +1,9 @@
 /* Bevvi receipt design — adapted from Bevvi_Receipt.html */
 
 .receipt-pane {
-  --red: #c8102e;
-  --red-deep: #9a0a22;
-  --red-soft: #fdecef;
+  --red: rgb(var(--brand-accent, 200 16 46));
+  --red-deep: rgb(var(--brand-accent-deep, 154 10 34));
+  --red-soft: rgb(var(--brand-accent-soft, 253 236 239));
   --ink: #0f0f12;
   --ink-soft: #4a4a52;
   --ink-faint: #8a8a92;

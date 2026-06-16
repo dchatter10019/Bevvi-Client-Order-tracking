@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { Eye, EyeOff, Radio } from 'lucide-react'
 import Logo from './Logo'
 import { AUTH } from '../utils/constants'
+import { useCustomer } from '../customers/CustomerContext'
 
 const Login = ({ onLogin }) => {
+  const { config } = useCustomer() || {}
   const [showPassword, setShowPassword] = useState(false)
   const [credentials, setCredentials] = useState({ username: '', password: '' })
   const [error, setError] = useState('')
@@ -31,14 +33,21 @@ const Login = ({ onLogin }) => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      <div className="relative hidden lg:flex flex-col justify-between bg-black px-12 py-14 overflow-hidden">
+      <div className="relative hidden lg:flex flex-col justify-between bg-bevvi-sidebar px-12 py-14 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-bevvi-700/25 via-transparent to-transparent" />
-        <div className="relative rounded-xl bg-black p-6 -ml-2">
+        <div className="relative rounded-xl bg-bevvi-sidebar p-6 -ml-2">
           <Logo size="large" />
           <h1 className="mt-6 text-5xl font-bold text-white leading-tight">
             Order<br />Monitor
           </h1>
-          <p className="mt-4 text-xl text-bevvi-200 font-medium">Alcohol Made Easy.</p>
+          {config?.label && (
+            <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold uppercase tracking-widest text-white">
+              {config.label}
+            </p>
+          )}
+          {config?.tagline && (
+            <p className="mt-4 text-xl text-bevvi-200 font-medium">{config.tagline}</p>
+          )}
         </div>
 
         <div className="relative space-y-6">
@@ -57,11 +66,16 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center px-6 py-12 bg-slate-50">
+      <div className="flex items-center justify-center px-6 py-12 bg-bevvi-canvas">
         <div className="w-full max-w-sm">
-          <div className="lg:hidden mb-8 rounded-xl bg-black p-4 inline-block">
+          <div className="lg:hidden mb-8 rounded-xl bg-bevvi-sidebar p-4 inline-block">
             <Logo size="default" />
             <h2 className="mt-3 text-2xl font-bold text-white">Order Monitor</h2>
+            {config?.label && (
+              <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-bevvi-200">
+                {config.label}
+              </p>
+            )}
           </div>
 
           <h2 className="text-2xl font-bold text-slate-900">Sign in</h2>

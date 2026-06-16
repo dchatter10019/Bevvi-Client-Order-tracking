@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-body, 'Inter', system-ui, sans-serif);
     @apply text-slate-800 antialiased;
   }
 
@@ -15,7 +15,7 @@
 
 @layer components {
   .monitor-sidebar {
-    @apply bg-black text-white flex flex-col;
+    @apply bg-bevvi-sidebar text-white flex flex-col;
   }
 
   .monitor-sidebar-backdrop {
@@ -71,7 +71,7 @@
   }
 
   .monitor-btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-bevvi-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-bevvi-500 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-bevvi-600 px-4 py-2.5 text-sm font-semibold text-bevvi-onprimary transition hover:bg-bevvi-700 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .monitor-btn-ghost {
@@ -83,7 +83,7 @@
   }
 
   .monitor-status-footer {
-    @apply relative z-20 flex items-center justify-between gap-3 border-t border-white/10 bg-black px-4 sm:px-6 py-2.5 text-xs text-slate-400 shrink-0;
+    @apply relative z-20 flex items-center justify-between gap-3 border-t border-white/10 bg-bevvi-sidebar px-4 sm:px-6 py-2.5 text-xs text-slate-400 shrink-0;
   }
 
   .monitor-status-version {
