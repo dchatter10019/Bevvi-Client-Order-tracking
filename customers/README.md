@@ -11,6 +11,7 @@ Deploy **one** frontend build. The active customer is chosen from the URL hostna
 https://ordertracker.getbevvi.com              → All customers (internal hub)
 https://ac-ordertracker.getbevvi.com           → Air Culinaire skin
 https://island-ordertracker.getbevvi.com       → Island Kitchen skin
+https://netjets-ordertracker.getbevvi.com      → NetJets skin
 ```
 
 Set a custom white-label hostname per customer in `## Monitor Settings`:
