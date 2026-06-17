@@ -5,21 +5,28 @@ file and the dashboard picks it up automatically — no code changes required.
 
 ## Production deployment (one build, many brands)
 
-Deploy **one** frontend build. The active customer is chosen from the URL:
+Deploy **one** frontend build. The active customer is chosen from the URL hostname:
 
 ```
-https://airculinaire.ordertracker.getbevvi.com   → Air Culinaire skin
-https://islandkitchen.ordertracker.getbevvi.com  → Island Kitchen skin
+https://ordertracker.getbevvi.com              → All customers (internal hub)
+https://ac-ordertracker.getbevvi.com           → Air Culinaire skin
+https://island-ordertracker.getbevvi.com       → Island Kitchen skin
 ```
 
-The subdomain must match the `id` in that customer's `customers/*.md` file.
-DNS should point `*.ordertracker.getbevvi.com` at the same host (wildcard CNAME).
+Set a custom white-label hostname per customer in `## Monitor Settings`:
+
+```markdown
+- hostname: ac-ordertracker.getbevvi.com
+```
+
+If no custom hostname is set, the default is `https://<id>.ordertracker.getbevvi.com`.
+DNS must point each hostname at the same host.
 
 Adding a new white-label site:
 
-1. Add `customers/<id>.md` (+ logo assets in `public/`).
+1. Add `customers/<id>.md` with `- hostname: your-subdomain.getbevvi.com`.
 2. Deploy the shared build (no per-customer build step).
-3. Create DNS for `<id>.ordertracker.getbevvi.com`.
+3. Create DNS for that hostname.
 
 ## Local dev: choosing the customer
 

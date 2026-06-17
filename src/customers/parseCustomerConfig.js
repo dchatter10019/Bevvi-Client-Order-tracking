@@ -23,7 +23,7 @@ const SECTION_ALIASES = {
   'status pipeline': 'pipeline'
 }
 
-const IDENTITY_KEYS = new Set(['id', 'tagline', 'title', 'label'])
+const IDENTITY_KEYS = new Set(['id', 'tagline', 'title', 'label', 'hostname'])
 
 const HEX = '#[0-9A-Fa-f]{3,8}'
 
@@ -97,6 +97,8 @@ export function parseCustomerConfig(markdown) {
       if (!Number.isNaN(code)) config.statuses[code] = value
     } else if (IDENTITY_KEYS.has(key)) {
       config.identity[key] = value
+    } else if (key === 'hostnames') {
+      config.identity.hostnames = value.split(/[,;\s]+/).map((h) => h.trim()).filter(Boolean)
     } else {
       config.branding[key] = value
     }
@@ -138,9 +140,17 @@ export function normalizeCustomerConfig(config, sourceName = '') {
   if (tokens.primaryDark && !shadeOverrides['700']) shadeOverrides['700'] = tokens.primaryDark
   if (tokens.primaryLight && !shadeOverrides['100']) shadeOverrides['100'] = tokens.primaryLight
 
+  const hostnames = [
+    config.identity.hostname,
+    ...(config.identity.hostnames || [])
+  ]
+    .map((h) => h?.toLowerCase().replace(/^https?:\/\//, '').split('/')[0].split(':')[0])
+    .filter(Boolean)
+
   return {
     id,
     label,
+    hostnames,
     tagline: config.identity.tagline || '',
     title: config.identity.title || `${label} Order Monitor`,
     logo: config.branding.logo || '/bevvi-logo.png',

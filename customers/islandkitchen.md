@@ -477,6 +477,7 @@ If building a Bevvi-powered ordering page for Island Kitchen clients:
 ## Monitor Settings
 
 - id: islandkitchen
+- hostname: island-ordertracker.getbevvi.com
 - label: Island Kitchen
 - tagline: Fresh. Simple. Good food for all.
 - logo: /bevvi-logo.png

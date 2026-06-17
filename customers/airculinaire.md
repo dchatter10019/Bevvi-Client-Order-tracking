@@ -392,6 +392,7 @@ When building Bevvi-powered pages for Air Culinaire clients:
 ## Monitor Settings
 
 - id: airculinaire
+- hostname: ac-ordertracker.getbevvi.com
 - tagline: Chef-crafted. Globally delivered.
 - logo: /bevvi-logo.png
 - favicon: /bevvi-favicon-32.png

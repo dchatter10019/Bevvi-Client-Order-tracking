@@ -1,5 +1,10 @@
 import { parseCustomerConfig, normalizeCustomerConfig } from './parseCustomerConfig'
-import { resolveCustomerFromHostname } from './resolveCustomerHost'
+import {
+  buildHostnameMap,
+  isHubHostname,
+  resolveCustomerFromHostname,
+  resolveUnknownHostCustomerId
+} from './resolveCustomerHost'
 
 const configFiles = import.meta.glob('../../customers/*.md', {
   query: '?raw',
@@ -23,12 +28,18 @@ if (Object.keys(customers).length === 0) {
   console.error('No customer configs found in customers/*.md')
 }
 
+const hostnameMap = buildHostnameMap(customers)
+
 function resolveHostCustomerId() {
   if (typeof window === 'undefined') return null
-  return resolveCustomerFromHostname(window.location.hostname)
+  return resolveCustomerFromHostname(window.location.hostname, hostnameMap)
 }
 
 function resolveLockedCustomerId() {
+  if (typeof window !== 'undefined' && isHubHostname(window.location.hostname)) {
+    return null
+  }
+
   const fromHost = resolveHostCustomerId()
   if (fromHost && customers[fromHost]) return fromHost
 
@@ -38,11 +49,14 @@ function resolveLockedCustomerId() {
   return null
 }
 
-/** Set when URL matches *.ordertracker.getbevvi.com but id has no config. */
+/** Set when URL matches a configured hostname but id has no config. */
 export const UNKNOWN_HOST_CUSTOMER_ID = (() => {
-  const fromHost = resolveHostCustomerId()
-  if (fromHost && !customers[fromHost]) return fromHost
-  return null
+  if (typeof window === 'undefined') return null
+  return resolveUnknownHostCustomerId(
+    window.location.hostname,
+    hostnameMap,
+    customers
+  )
 })()
 
 /** Locked when hostname or VITE_CUSTOMER resolves to a known customer. */
