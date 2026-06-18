@@ -89,7 +89,6 @@ const RECEIPT_TAGLINE = 'Seamless Alcohol Delivery'
 
 const OrderReceipt = ({ order, customer, customerLabel }) => {
   const recipient = order.recipientorders?.[0] || {}
-  const store = order.estDetails || {}
   const products = getOrderProducts(order)
   const trackerSteps = getTrackerSteps(order.corpOrderStatus, customer)
   const shippingOrder = isShippingOrder(order)
@@ -128,7 +127,7 @@ const OrderReceipt = ({ order, customer, customerLabel }) => {
             Issued · {formatReceiptDate(order.createdAt)}
             <br />
             {customerLabel}
-            {recipient.city ? ` · ${recipient.city}` : store.name ? ` · ${store.name}` : ''}
+            {recipient.city ? ` · ${recipient.city}` : ''}
             <br />
             <span className="ord">№ {order.corpOrderNum}</span>
           </div>

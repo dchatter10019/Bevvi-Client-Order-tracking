@@ -18,13 +18,12 @@ app.get('/api/health', (_req, res) => {
 
 app.get('/api/orders', async (req, res) => {
   try {
-    const { client, numofdays, location, storeName } = req.query
+    const { client, numofdays, location } = req.query
 
     const params = new URLSearchParams()
     if (client) params.set('client', client)
     if (numofdays) params.set('numofdays', numofdays)
     if (location) params.set('location', location)
-    if (storeName) params.set('storeName', storeName)
 
     const apiUrl = `${BEVVI_API_BASE}/api/corputil/getOrderHistory?${params.toString()}`
     const response = await axios.get(apiUrl, { timeout: 60000 })

@@ -89,7 +89,7 @@ export function orderMatchesSearch(order, rawSearch) {
 }
 
 export const SEARCH_PLACEHOLDER =
-  'Search by order number, company, amount, or location…'
+  'Search by order number, company / vendor, amount, or location…'
 
 export const SEARCH_TOOLTIP =
-  'Search by Bevvi order number, external order number, company name, exact amount (e.g. 1,389.00), or location (city, state, or zip).'
+  'Search by Bevvi order number, external order number, company / vendor name, exact amount (e.g. 1,389.00), or location (city, state, or zip).'

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { Package, Printer, Store, Truck, User, X } from 'lucide-react'
+import { Package, Printer, Truck, User, X } from 'lucide-react'
 import { formatCurrency, formatDateTime, getStatusLabel } from '../utils/constants'
 import { getOrderProducts, getProductLineTotal, getNetworkServiceCharge, getOrderCompanyName, hasTrackingInfo, isShippingOrder } from '../utils/orderDetail'
 import OrderReceipt from './OrderReceipt'
@@ -48,7 +48,6 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
   }
 
   const recipient = order.recipientorders?.[0] || {}
-  const store = order.estDetails || {}
   const products = getOrderProducts(order)
   const shippingOrder = isShippingOrder(order)
   const showTracking = hasTrackingInfo(order)
@@ -80,7 +79,7 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
                 <DetailRow label="Recipient Order Number" value={recipient.recipientOrderNum} />
                 <DetailRow label="Status" value={statusLabel} />
                 <DetailRow label="Order Type" value={order.orderType} />
-                <DetailRow label="Company" value={getOrderCompanyName(order)} />
+                <DetailRow label="Company / Vendor" value={getOrderCompanyName(order)} />
                 <DetailRow label="Client" value={order.corpClient || customerLabel} />
               </dl>
             </DetailSection>
@@ -119,18 +118,6 @@ const OrderDetailDrawer = ({ order, customer, customerLabel, onClose }) => {
                     <br />
                     {[recipient.city, recipient.state, recipient.zipcode].filter(Boolean).join(', ')}
                   </p>
-                </div>
-              </div>
-            </DetailSection>
-
-            <DetailSection title="Store">
-              <div className="detail-card">
-                <div className="detail-card-icon">
-                  <Store className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="detail-card-title">{store.name || '—'}</p>
-                  <p className="detail-card-text">{store.address}</p>
                 </div>
               </div>
             </DetailSection>

@@ -1,6 +1,6 @@
 {
   "name": "order-monitor-dashboard",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Bevvi Order Monitor Dashboard",
   "type": "module",
   "scripts": {

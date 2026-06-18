@@ -10,7 +10,6 @@ function escapeCsv(value) {
 
 function flattenOrder(order, client) {
   const recipient = order.recipientorders?.[0] || {}
-  const store = order.estDetails || {}
 
   return {
     orderNumber: order.corpOrderNum || order.origOrderNumber || '',
@@ -19,8 +18,6 @@ function flattenOrder(order, client) {
     status: getStatusLabel(order.corpOrderStatus, client || order.corpClient),
     orderDate: formatDateTime(order.createdAt),
     deliveryDate: formatDateTime(order.deliveryDate || order.deliveryDateTimeToDisplay),
-    storeName: store.name || '',
-    storeAddress: store.address || '',
     recipientFirstName: recipient.firstName || '',
     recipientLastName: recipient.lastName || '',
     recipientEmail: recipient.email || '',
@@ -42,12 +39,10 @@ function flattenOrder(order, client) {
 const CSV_COLUMNS = [
   ['orderNumber', 'Bevvi Order Number'],
   ['externalOrderNumber', 'External Order Number'],
-  ['companyName', 'Company'],
+  ['companyName', 'Company / Vendor'],
   ['status', 'Status'],
   ['orderDate', 'Order Date'],
   ['deliveryDate', 'Delivery Date'],
-  ['storeName', 'Store Name'],
-  ['storeAddress', 'Store Address'],
   ['recipientFirstName', 'Recipient First Name'],
   ['recipientLastName', 'Recipient Last Name'],
   ['recipientEmail', 'Recipient Email'],
