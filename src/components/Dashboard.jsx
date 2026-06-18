@@ -147,12 +147,6 @@ const Dashboard = ({ onLogout }) => {
     return list
   }, [orders, search, statusFilter, customer])
 
-  const sortedOrders = useMemo(() => {
-    return [...filteredOrders].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    )
-  }, [filteredOrders])
-
   const totalValue = filteredOrders.reduce((sum, o) => sum + (Number(o.orderTotal) || 0), 0)
 
   const handleDownload = () => {
@@ -369,10 +363,10 @@ const Dashboard = ({ onLogout }) => {
             </div>
           )}
 
-          {sortedOrders.length > 0 && (
+          {filteredOrders.length > 0 && (
             <div className={isLoading ? 'opacity-60 pointer-events-none' : ''}>
               <OrderTable
-                orders={sortedOrders}
+                orders={filteredOrders}
                 customer={customer}
                 selectedOrderId={selectedOrder?.id || selectedOrder?.corpOrderNum}
                 onOrderSelect={(order) => {

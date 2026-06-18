@@ -111,7 +111,32 @@
   }
 
   .list-head {
-    @apply relative px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 select-none;
+    @apply relative px-0 py-0 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 select-none;
+  }
+
+  .sortable-head-btn {
+    @apply flex w-full items-center gap-1 border-0 bg-transparent px-4 py-3 pr-5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 transition-colors hover:text-slate-700;
+  }
+
+  .sortable-head-btn.is-right {
+    @apply justify-end text-right;
+  }
+
+  .sortable-head-btn.is-active {
+    @apply text-bevvi-700;
+  }
+
+  .sortable-head-label {
+    @apply truncate;
+  }
+
+  .sortable-head-icon {
+    @apply h-3.5 w-3.5 shrink-0 opacity-40;
+  }
+
+  .sortable-head-btn.is-active .sortable-head-icon,
+  .sortable-head-btn:hover .sortable-head-icon {
+    @apply opacity-100;
   }
 
   .resizable-head {

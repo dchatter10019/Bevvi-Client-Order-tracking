@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
 import { formatCurrency, formatDateTime, getStatusLabel } from '../utils/constants'
 import { getOrderCompanyName } from '../utils/orderDetail'
+import { DEFAULT_ORDER_SORT, sortOrders } from '../utils/orderSort'
 
 const STORAGE_KEY = 'bevvi-order-monitor-column-widths'
 
@@ -100,15 +102,28 @@ function OrderCardList({ orders, customer, selectedOrderId, onOrderSelect }) {
   )
 }
 
-function ResizableHeader({ column, width, onResizeStart, isResizing }) {
+function ResizableHeader({ column, width, onResizeStart, isResizing, sortColumn, sortDirection, onSort }) {
+  const isActive = sortColumn === column.id
+  const SortIcon = isActive
+    ? sortDirection === 'asc'
+      ? ArrowUp
+      : ArrowDown
+    : ArrowUpDown
+
   return (
     <th
       className={`list-head resizable-head ${isResizing ? 'is-resizing' : ''}`}
       style={{ width, minWidth: width, maxWidth: width }}
+      aria-sort={isActive ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
     >
-      <span className={`block truncate ${column.align === 'right' ? 'text-right' : ''}`}>
-        {column.label}
-      </span>
+      <button
+        type="button"
+        className={`sortable-head-btn ${column.align === 'right' ? 'is-right' : ''} ${isActive ? 'is-active' : ''}`}
+        onClick={() => onSort(column.id)}
+      >
+        <span className="sortable-head-label">{column.label}</span>
+        <SortIcon className="sortable-head-icon" aria-hidden="true" />
+      </button>
       <span
         role="separator"
         aria-orientation="vertical"
@@ -123,7 +138,26 @@ function ResizableHeader({ column, width, onResizeStart, isResizing }) {
 function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
   const [columnWidths, setColumnWidths] = useState(loadWidths)
   const [resizingColumn, setResizingColumn] = useState(null)
+  const [sortColumn, setSortColumn] = useState(DEFAULT_ORDER_SORT.column)
+  const [sortDirection, setSortDirection] = useState(DEFAULT_ORDER_SORT.direction)
   const resizeState = useRef(null)
+
+  const sortedOrders = useMemo(
+    () => sortOrders(orders, sortColumn, sortDirection, customer),
+    [orders, sortColumn, sortDirection, customer]
+  )
+
+  const handleSort = useCallback((columnId) => {
+    if (sortColumn === columnId) {
+      setSortDirection((currentDirection) => (currentDirection === 'asc' ? 'desc' : 'asc'))
+      return
+    }
+
+    setSortColumn(columnId)
+    setSortDirection(
+      columnId === 'orderDate' || columnId === 'deliveryDate' || columnId === 'total' ? 'desc' : 'asc'
+    )
+  }, [sortColumn])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(columnWidths))
@@ -183,7 +217,7 @@ function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
   return (
     <>
       <OrderCardList
-        orders={orders}
+        orders={sortedOrders}
         customer={customer}
         selectedOrderId={selectedOrderId}
         onOrderSelect={onOrderSelect}
@@ -205,12 +239,15 @@ function OrderTable({ orders, customer, selectedOrderId, onOrderSelect }) {
                 width={columnWidths[column.id]}
                 onResizeStart={handleResizeStart}
                 isResizing={resizingColumn === column.id}
+                sortColumn={sortColumn}
+                sortDirection={sortDirection}
+                onSort={handleSort}
               />
             ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100 bg-white">
-          {orders.map((order) => {
+          {sortedOrders.map((order) => {
             const recipient = order.recipientorders?.[0] || {}
             const recipientName = [recipient.firstName, recipient.lastName].filter(Boolean).join(' ')
             const location = [recipient.city, recipient.state].filter(Boolean).join(', ')
