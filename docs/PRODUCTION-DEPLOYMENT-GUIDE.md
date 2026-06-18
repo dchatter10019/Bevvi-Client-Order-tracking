@@ -1,6 +1,6 @@
 # Bevvi Order Monitor — Production Deployment Guide
 
-**Version:** 1.0.1  
+**Version:** 1.0.2  
 **Last updated:** June 2026
 
 This document explains how to deploy the Order Monitor Dashboard as a **single codebase** serving multiple white-labeled customer sites via custom URLs.
@@ -138,7 +138,11 @@ npm run build
 
 Output: `dist/` folder (static HTML, JS, CSS).
 
+The app version is read from `package.json` at build time (frontend footer) and at server start (API health check). **Bump `package.json` only** — do not hardcode a version elsewhere.
+
 During build, all `customers/*.md` files are bundled into the JavaScript. Adding a customer requires a **redeploy** of this build, but not a separate build per customer.
+
+**Important:** Frontend and backend deploy separately. After a version bump you must **rebuild and redeploy `dist/`** as well as restart the API server. Pushing code to GitHub does not update production until both are deployed. If the API shows a newer version than the footer, the static frontend is still serving an older build (or a cached JS bundle).
 
 ### Deploy static frontend
 
@@ -195,7 +199,7 @@ The `client` parameter matches the `id` field in each customer's markdown config
 
 ```
 GET /api/health
-→ { "status": "ok", "service": "order-monitor-dashboard" }
+→ { "status": "ok", "service": "order-monitor-dashboard", "version": "1.0.2" }
 ```
 
 ---

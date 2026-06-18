@@ -2,18 +2,20 @@ import express from 'express'
 import cors from 'cors'
 import axios from 'axios'
 import dotenv from 'dotenv'
+import pkg from './package.json' with { type: 'json' }
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3001
 const BEVVI_API_BASE = process.env.BEVVI_API_BASE_URL || 'https://api.getbevvi.com'
+const APP_VERSION = pkg.version
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3002' }))
 app.use(express.json())
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'order-monitor-dashboard' })
+  res.json({ status: 'ok', service: 'order-monitor-dashboard', version: APP_VERSION })
 })
 
 app.get('/api/orders', async (req, res) => {
@@ -43,5 +45,5 @@ app.get('/api/orders', async (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Order Monitor API proxy running on http://localhost:${PORT}`)
+  console.log(`Order Monitor API proxy v${APP_VERSION} running on http://localhost:${PORT}`)
 })
