@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import { readFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { injectVersionPatch } from './scripts/versionPatchScript.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json'), 'utf8'))
@@ -51,11 +52,20 @@ app.get('/api/orders', async (req, res) => {
 })
 
 if (existsSync(distPath)) {
-  app.use(express.static(distPath, { index: false }))
+  app.use(express.static(distPath, {
+    index: false,
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+      }
+    }
+  }))
 
   app.get(/^(?!\/api).*/, (_req, res) => {
-    res.setHeader('Cache-Control', 'no-cache')
-    res.sendFile(join(distPath, 'index.html'))
+    const indexPath = join(distPath, 'index.html')
+    const html = injectVersionPatch(readFileSync(indexPath, 'utf8'), APP_VERSION)
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+    res.type('html').send(html)
   })
 }
 

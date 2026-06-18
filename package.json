@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/select-customer.mjs && vite",
-    "build": "node scripts/select-customer.mjs && vite build",
+    "build": "node scripts/select-customer.mjs && vite build && node scripts/verify-deploy.mjs",
     "preview": "vite preview",
     "server": "node server.js",
     "dev:full": "node server.js & vite",

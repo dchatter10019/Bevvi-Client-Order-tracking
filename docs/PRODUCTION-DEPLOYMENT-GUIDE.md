@@ -144,6 +144,25 @@ During build, all `customers/*.md` files are bundled into the JavaScript. Adding
 
 **Important:** Frontend and backend deploy separately. After a version bump you must **rebuild and redeploy `dist/`** as well as restart the API server. Pushing code to GitHub does not update production until both are deployed. If the API shows a newer version than the footer, the static frontend is still serving an older build (or a cached JS bundle).
 
+**Common nginx issue:** If `/api/*` goes to Node but `/` and `/assets/*` are served from a fixed directory (e.g. `/var/www/ordertracker/`), running `npm run build` in the repo is **not enough** — you must copy the new `dist/` into that nginx web root:
+
+```bash
+npm run build
+rsync -av --delete dist/ /var/www/ordertracker/
+sudo nginx -s reload
+```
+
+Verify the live site is serving the new build:
+
+```bash
+curl -s https://ac-ordertracker.getbevvi.com/ | grep bevvi-version-patch
+curl -s https://ac-ordertracker.getbevvi.com/ | grep bevvi-app-version
+```
+
+Both should match. If `grep` returns nothing, nginx is still serving an old `index.html`.
+
+Built `index.html` includes an inline script that sets the footer version from `/api/health`, so the version label stays correct even when an older JS bundle is cached.
+
 ### Deploy static frontend
 
 Upload `dist/` to your static host. Configure:
