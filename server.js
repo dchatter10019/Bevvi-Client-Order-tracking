@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import axios from 'axios'
 import dotenv from 'dotenv'
-import { readFileSync } from 'node:fs'
+import { readFileSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -15,6 +15,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 const BEVVI_API_BASE = process.env.BEVVI_API_BASE_URL || 'https://api.getbevvi.com'
 const APP_VERSION = pkg.version
+const distPath = join(__dirname, 'dist')
 
 app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3002' }))
 app.use(express.json())
@@ -49,6 +50,16 @@ app.get('/api/orders', async (req, res) => {
   }
 })
 
+if (existsSync(distPath)) {
+  app.use(express.static(distPath, { index: false }))
+
+  app.get(/^(?!\/api).*/, (_req, res) => {
+    res.setHeader('Cache-Control', 'no-cache')
+    res.sendFile(join(distPath, 'index.html'))
+  })
+}
+
 app.listen(PORT, () => {
-  console.log(`Order Monitor API proxy v${APP_VERSION} running on http://localhost:${PORT}`)
+  const mode = existsSync(distPath) ? 'API + frontend' : 'API only'
+  console.log(`Order Monitor ${mode} v${APP_VERSION} running on http://localhost:${PORT}`)
 })

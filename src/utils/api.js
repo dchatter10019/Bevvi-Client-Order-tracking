@@ -1,5 +1,13 @@
 import { buildOrderQuery } from './dateUtils'
 
+export async function fetchAppVersion({ signal } = {}) {
+  const response = await fetch('/api/health', { signal })
+  if (!response.ok) return null
+
+  const payload = await response.json()
+  return payload.version || null
+}
+
 export async function fetchOrders({ client, startDate, signal }) {
   const query = buildOrderQuery({ client, startDate })
   const params = new URLSearchParams(query)
